@@ -3,8 +3,8 @@ import { Vector2d } from "konva/lib/types";
 
 type NodeMetadata = {
   pos: Vector2d,
-  forces?: Vector2d[],
-  links?: 'apoio' | 'engaste'
+  force?: Vector2d,
+  link?: 'apoio' | 'engaste'
 }
 
 export const generateData = () => {
@@ -45,12 +45,16 @@ export const generateData = () => {
       x: 100,
       y: 0
     },
+    force: {
+      x: -100,
+      y: 100,
+    }
   });
   graph.addNode('G', {
     pos: {
       x: -100,
       y: 100
-    },
+    }
   });
   graph.addNode('H', {
     pos: {
