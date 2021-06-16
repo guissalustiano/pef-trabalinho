@@ -12,26 +12,26 @@ export const generateData = () => {
 
   graph.addNode('A', {
     pos: {
-      x: -200,
-      y: -200
+      x: -2,
+      y: -2
     },
   });
   graph.addNode('B', {
     pos: {
-      x: 200,
-      y: -200
+      x: 2,
+      y: -2
     },
   });
   graph.addNode('C', {
     pos: {
       x: 0,
-      y: -100
+      y: -1
     },
   });
   graph.addNode('D', {
     pos: {
-      x: 100,
-      y: -100
+      x: 1,
+      y: -1
     },
   });
   graph.addNode('E', {
@@ -42,24 +42,24 @@ export const generateData = () => {
   });
   graph.addNode('F', {
     pos: {
-      x: 100,
+      x: 1,
       y: 0
     },
     force: {
-      x: -100,
-      y: 100,
+      x: -1,
+      y: 1,
     }
   });
   graph.addNode('G', {
     pos: {
-      x: -100,
-      y: 100
+      x: -1,
+      y: 1
     }
   });
   graph.addNode('H', {
     pos: {
-      x: 300,
-      y: 100
+      x: 3,
+      y: 1
     },
   });
 
