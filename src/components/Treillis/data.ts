@@ -1,14 +1,8 @@
 import { UndirectedGraph } from "graphology";
-import { Vector2d } from "konva/lib/types";
+import { TreillisNode } from "../../helper/treillis";
 
-type NodeMetadata = {
-  pos: Vector2d,
-  force?: Vector2d,
-  link?: 'apoio' | 'engaste'
-}
-
-export const generateData = () => {
-  const graph = new UndirectedGraph<NodeMetadata>();
+export const generateTreillisSample = () => {
+  const graph = new UndirectedGraph<TreillisNode>();
 
   graph.addNode('A', {
     pos: {
