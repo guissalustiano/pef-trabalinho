@@ -1,12 +1,12 @@
 import React from 'react';
-import Drawer from '../Drawer';
+import Treillis from '../Treillis';
 
 import './style.css'
 
 function App() {
   return (
     <div className="App">
-        <Drawer />
+        <Treillis />
     </div>
   );
 }
