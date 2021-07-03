@@ -1,8 +1,6 @@
 import { UndirectedGraph } from "graphology";
 import { Vector2d } from "konva/lib/types";
-import nj from "numjs";
-
-(nj as any).config.printThreshold = 28;
+import * as math from "mathjs";
 
 export type TreillisNode = {
   pos: Vector2d,
@@ -13,8 +11,6 @@ export type TreillisNode = {
 export type TreillisEdge = {
   forceModule?: number,
 }
-
-const zip = <T, U>(a: Array<T>, b: Array<U>) => a.map((k, i) => [k, b[i]]);
 
 function distance(p1: Vector2d, p2: Vector2d) {
   return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
@@ -30,30 +26,30 @@ function memberStiffnessMatrix(treillis: UndirectedGraph<TreillisNode>, edgeKey:
   const lambdaX = (pos1.x - pos2.x) / width;
   const lambdaY = (pos1.y - pos2.y) / width;
 
-  let matrix = nj.array([
+  let matrix = math.matrix([
     [lambdaX * lambdaX, lambdaX * lambdaY, -lambdaX * lambdaX, -lambdaX * lambdaY],
     [lambdaX * lambdaY, lambdaY * lambdaY, -lambdaX * lambdaY, -lambdaY * lambdaY],
     [-lambdaX * lambdaX, -lambdaX * lambdaY, lambdaX * lambdaX, lambdaX * lambdaY],
     [-lambdaX * lambdaY, -lambdaY * lambdaY, lambdaX * lambdaY, lambdaY * lambdaY]])
 
-  matrix = matrix.multiply(1 / width);
+  matrix = math.multiply(matrix, 1 / width);
 
   return { edgeKey, matrix }
 }
 
 function sparseMatrix(keys: number[], len: number) {
   const lines = keys.map(k => {
-    const line = nj.zeros(len);
-    line.set(k, 1)
+    const line = new Array(len).fill(0);
+    line[k] = 1
     return line;
   })
-  return nj.stack(lines) as unknown as nj.NdArray<number[]> // Se fosse rust funcionava
+  return math.matrix(lines)
 }
 
 // based in
 // https://edisciplinas.usp.br/pluginfile.php/4109576/mod_resource/content/1/Notas%20de%20aula-%20v2.pdf
 // https://www.youtube.com/watch?v=aDPaofpQt5g
-function sparseStiffnessMatrix(treillis: UndirectedGraph<TreillisNode>, { edgeKey, matrix }: { edgeKey: string, matrix: nj.NdArray<number[]> }) {
+function sparseStiffnessMatrix(treillis: UndirectedGraph<TreillisNode>, { edgeKey, matrix }: { edgeKey: string, matrix: math.Matrix }) {
   const [node1, node2] = treillis.extremities(edgeKey);
   const nodes = treillis.nodes();
   const node1Index = nodes.indexOf(node1);
@@ -68,23 +64,24 @@ function sparseStiffnessMatrix(treillis: UndirectedGraph<TreillisNode>, { edgeKe
 
   const sparcematrix = sparseMatrix([node1IndexX, node1IndexY, node2IndexX, node2IndexY], 2 * nodes.length)
 
-  const result = nj.dot(sparcematrix.transpose(), nj.dot(matrix, sparcematrix));
+  const subresult = math.multiply(matrix, sparcematrix)
+  const result = math.multiply(math.transpose(sparcematrix), subresult);
   return result;
 }
 
-function reduceMatrix(indices: number[], matrix: nj.NdArray<number[]>) {
+function reduceMatrix(indices: number[], matrix: math.Matrix) {
   const len = indices.length
-  const rmatrix = nj.zeros([len, len])
+  let rmatrix = math.zeros(len, len)
   for (let i = 0; i < len; i++) {
     for (let j = 0; j < len; j++) {
-      const e = matrix.get(indices[i], indices[j]) as unknown as number;
-      rmatrix.set(i, j, e)
+      const e = math.subset(matrix, math.index(indices[i], indices[j]));
+      rmatrix = math.subset(rmatrix, math.index(i, j), e);
     }
   }
   return rmatrix;
 }
 
-function nodalCalcs(treillis: UndirectedGraph<TreillisNode>, stiffnessMatrix: nj.NdArray<number[]>) {
+function nodalCalcs(treillis: UndirectedGraph<TreillisNode>, stiffnessMatrix: math.Matrix) {
   const nodes = Array.from(treillis.nodeEntries()).map(([id, atributes]) => ({ id, ...atributes }));
   const nodalVariables = nodes
     .flatMap((node) => {
@@ -111,11 +108,13 @@ function nodalCalcs(treillis: UndirectedGraph<TreillisNode>, stiffnessMatrix: nj
   const nodalFreedomVariables = nodalVariables.filter(n => n.link);
   const nodalNotFreedomVariables = nodalVariables.filter(n => !n.link);
 
-  const fa = nj.array(nodalNotFreedomVariables.map(n => n.force));
+  const fa = math.matrix(nodalNotFreedomVariables.map(n => n.force));
   const kaa = reduceMatrix(nodalNotFreedomVariables.map(n => n.index),stiffnessMatrix);
 
   console.log(fa.toString())
   console.log(kaa.toString())
+
+
 }
 
 function solveStiffnessMatrix(treillis: UndirectedGraph<TreillisNode>) {
@@ -123,7 +122,7 @@ function solveStiffnessMatrix(treillis: UndirectedGraph<TreillisNode>) {
   const stiffnessMatrix = edges
     .map(k => memberStiffnessMatrix(treillis, k))
     .map(sm => sparseStiffnessMatrix(treillis, sm))
-    .reduce((acc, cur) => acc.add(cur));
+    .reduce((acc, cur) => math.add(acc, cur) as any);
 
   console.log(stiffnessMatrix.toString());
 
