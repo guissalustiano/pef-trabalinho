@@ -7,12 +7,14 @@ import nj from "numjs";
 export type TreillisNode = {
   pos: Vector2d,
   force?: Vector2d,
-  link?: 'apoio' | 'engaste'
+  link?: {x?: boolean, y?: boolean},
 }
 
 export type TreillisEdge = {
   forceModule?: number,
 }
+
+const zip = <T, U>(a: Array<T>, b: Array<U>) => a.map((k, i) => [k, b[i]]);
 
 function distance(p1: Vector2d, p2: Vector2d) {
   return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
@@ -70,12 +72,65 @@ function sparseStiffnessMatrix(treillis: UndirectedGraph<TreillisNode>, { edgeKe
   return result;
 }
 
-export function solveTreillis(treillis: UndirectedGraph<TreillisNode>): UndirectedGraph<TreillisNode, TreillisEdge> {
+function reduceMatrix(indices: number[], matrix: nj.NdArray<number[]>) {
+  const len = indices.length
+  const rmatrix = nj.zeros([len, len])
+  for (let i = 0; i < len; i++) {
+    for (let j = 0; j < len; j++) {
+      const e = matrix.get(indices[i], indices[j]) as unknown as number;
+      rmatrix.set(i, j, e)
+    }
+  }
+  return rmatrix;
+}
+
+function nodalCalcs(treillis: UndirectedGraph<TreillisNode>, stiffnessMatrix: nj.NdArray<number[]>) {
+  const nodes = Array.from(treillis.nodeEntries()).map(([id, atributes]) => ({ id, ...atributes }));
+  const nodalVariables = nodes
+    .flatMap((node) => {
+      const linkX = node.link?.x ?? false;
+      const partX = {
+        id: node.id,
+        force: linkX ? null : (node.force?.x ?? 0),
+        link: linkX,
+      }
+
+      const linkY = node.link?.y ?? false;
+      const partY = {
+        id: node.id,
+        force: linkY ? null : (node.force?.y ?? 0),
+        link: linkY,
+      }
+
+    return [partX, partY]
+  })
+  .map((obj, index) => ({
+    index, ...obj
+  }))
+
+  const nodalFreedomVariables = nodalVariables.filter(n => n.link);
+  const nodalNotFreedomVariables = nodalVariables.filter(n => !n.link);
+
+  const fa = nj.array(nodalNotFreedomVariables.map(n => n.force));
+  const kaa = reduceMatrix(nodalNotFreedomVariables.map(n => n.index),stiffnessMatrix);
+
+  console.log(fa.toString())
+  console.log(kaa.toString())
+}
+
+function solveStiffnessMatrix(treillis: UndirectedGraph<TreillisNode>) {
   const edges = treillis.edges();
   const stiffnessMatrix = edges
     .map(k => memberStiffnessMatrix(treillis, k))
     .map(sm => sparseStiffnessMatrix(treillis, sm))
     .reduce((acc, cur) => acc.add(cur));
+
   console.log(stiffnessMatrix.toString());
+
+  nodalCalcs(treillis, stiffnessMatrix);
+}
+
+export function solveTreillis(treillis: UndirectedGraph<TreillisNode>): UndirectedGraph<TreillisNode, TreillisEdge> {
+  solveStiffnessMatrix(treillis);
   return treillis;
 }

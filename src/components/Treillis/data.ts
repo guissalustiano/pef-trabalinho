@@ -19,21 +19,21 @@ export const generateTreillisSample = () => {
       x: -2.5,
       y: -2.5
     },
-    link: 'apoio'
+    link: { y: true }
   });
   graph.addNode('C', {
     pos: {
       x: -2.5,
       y: 2.5
     },
-    link: 'engaste'
+    link: { x: true, y: true }
   });
   graph.addNode('D', {
     pos: {
       x: 2.5,
       y: 2.5
     },
-    link: 'engaste'
+    link: { x: true, y: true }
   });
 
   graph.addEdge('B', 'A');
