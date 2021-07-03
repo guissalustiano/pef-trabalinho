@@ -12,8 +12,8 @@ import Konva from 'konva';
 
 const width = 700;
 const height = 500;
-const posFactor = 100;
-const forceFactor = 70;
+const posFactor = 72;
+const forceFactor = 16;
 
 const initialState = solveTreillis(generateTreillisSample());
 
@@ -35,6 +35,7 @@ const Drawer = () => {
       <Layer offsetX={-width / 2} offsetY={-height / 2}>
         {nodes.filter(node => node.force !== undefined).map(node => (
           <Arrow
+            key={node.id}
             x={node.pos.x * posFactor}
             y={node.pos.y * posFactor}
             points={[0, 0, node!.force!.x, node!.force!.y].map(x => x * forceFactor)}
@@ -48,6 +49,7 @@ const Drawer = () => {
           const pos2 = treillis.getNodeAttributes(node2).pos
           return (
             <Line
+              key={edge}
               points={[pos1.x, pos1.y, pos2.x, pos2.y].map(x => x * posFactor)}
               stroke='black'
             />

@@ -6,70 +6,42 @@ export const generateTreillisSample = () => {
 
   graph.addNode('A', {
     pos: {
-      x: -2,
-      y: -2
+      x: 2.5,
+      y: -2.5
     },
+    force: {
+      x: 5,
+      y: 10,
+    }
   });
   graph.addNode('B', {
     pos: {
-      x: 2,
-      y: -2
+      x: -2.5,
+      y: -2.5
     },
+    link: 'apoio'
   });
   graph.addNode('C', {
     pos: {
-      x: 0,
-      y: -1
+      x: -2.5,
+      y: 2.5
     },
+    link: 'engaste'
   });
   graph.addNode('D', {
     pos: {
-      x: 1,
-      y: -1
+      x: 2.5,
+      y: 2.5
     },
-  });
-  graph.addNode('E', {
-    pos: {
-      x: 0,
-      y: 0
-    },
-  });
-  graph.addNode('F', {
-    pos: {
-      x: 1,
-      y: 0
-    },
-    force: {
-      x: -1,
-      y: 1,
-    }
-  });
-  graph.addNode('G', {
-    pos: {
-      x: -1,
-      y: 1
-    }
-  });
-  graph.addNode('H', {
-    pos: {
-      x: 3,
-      y: 1
-    },
+    link: 'engaste'
   });
 
-  graph.addEdge('A', 'C');
-  graph.addEdge('D', 'B');
+  graph.addEdge('B', 'A');
+  graph.addEdge('D', 'A');
   graph.addEdge('C', 'D');
-  graph.addEdge('A', 'G');
-  graph.addEdge('G', 'C');
-  graph.addEdge('C', 'E');
-  graph.addEdge('C', 'F');
-  graph.addEdge('F', 'D');
-  graph.addEdge('D', 'H');
-  graph.addEdge('H', 'B');
-  graph.addEdge('G', 'E');
-  graph.addEdge('E', 'F');
-  graph.addEdge('F', 'H');
+  graph.addEdge('C', 'B');
+  graph.addEdge('C', 'A');
+  graph.addEdge('D', 'B');
 
   return graph
 }
