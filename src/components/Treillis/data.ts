@@ -1,75 +1,59 @@
-import { UndirectedGraph } from "graphology";
-import { TreillisNode } from "../../helper/treillis";
+import { Graph } from "graphs-for-js";
+import { TreillisEdge, TreillisNode } from "../../helper/treillis";
 
 export const generateTreillisSample = () => {
-  const graph = new UndirectedGraph<TreillisNode>();
+  const graph = new Graph<TreillisNode, TreillisEdge>()
+  .keyFn(i => i.id).undirected.weighted()
 
-  graph.addNode('A', {
+  const nodeA = {
+    id: 'A',
     pos: {
-      x: -2,
-      y: -2
-    },
-  });
-  graph.addNode('B', {
-    pos: {
-      x: 2,
-      y: -2
-    },
-  });
-  graph.addNode('C', {
-    pos: {
-      x: 0,
-      y: -1
-    },
-  });
-  graph.addNode('D', {
-    pos: {
-      x: 1,
-      y: -1
-    },
-  });
-  graph.addNode('E', {
-    pos: {
-      x: 0,
-      y: 0
-    },
-  });
-  graph.addNode('F', {
-    pos: {
-      x: 1,
-      y: 0
+      x: 2.5,
+      y: -2.5
     },
     force: {
-      x: -1,
-      y: 1,
+      x: 5,
+      y: 10,
     }
-  });
-  graph.addNode('G', {
+  }
+  const nodeB = {
+    id: 'B',
     pos: {
-      x: -1,
-      y: 1
-    }
-  });
-  graph.addNode('H', {
-    pos: {
-      x: 3,
-      y: 1
+      x: -2.5,
+      y: -2.5
     },
-  });
+    link: { y: true }
+  };
+  const nodeC = {
+    id: 'C',
+    pos: {
+      x: -2.5,
+      y: 2.5
+    },
+    link: { x: true, y: true }
+  };
+  const nodeD = {
+    id: 'D',
+    pos: {
+      x: 2.5,
+      y: 2.5
+    },
+    link: { x: true, y: true }
+  };
 
-  graph.addEdge('A', 'C');
-  graph.addEdge('D', 'B');
-  graph.addEdge('C', 'D');
-  graph.addEdge('A', 'G');
-  graph.addEdge('G', 'C');
-  graph.addEdge('C', 'E');
-  graph.addEdge('C', 'F');
-  graph.addEdge('F', 'D');
-  graph.addEdge('D', 'H');
-  graph.addEdge('H', 'B');
-  graph.addEdge('G', 'E');
-  graph.addEdge('E', 'F');
-  graph.addEdge('F', 'H');
+  graph.insert(nodeA)
+  graph.insert(nodeB)
+  graph.insert(nodeC)
+  graph.insert(nodeD)
+
+  graph.connect(nodeB, nodeA, {});
+  graph.connect(nodeD, nodeA, {});
+  graph.connect(nodeC, nodeD, {});
+  graph.connect(nodeC, nodeB, {});
+  graph.connect(nodeC, nodeA, {});
+  graph.connect(nodeD, nodeB, {});
+
+  console.log(graph)
 
   return graph
 }
