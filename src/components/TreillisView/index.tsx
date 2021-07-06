@@ -1,27 +1,28 @@
 import React from 'react';
 import { Stage, Layer, Circle, Line, Arrow, Text } from 'react-konva';
-import { generateTreillisSample } from './data';
-import { solveTreillis } from "../../helper/treillis";
+import { TreillisEdge, TreillisNode } from "../../helper/treillis";
+import { MutableWeightedGraph } from "graphs-for-js";
 
 import "./style.css";
 
-const width = 700;
-const height = 500;
 const posFactor = 72;
 const forceFactor = 16;
 
-const initialState = solveTreillis(generateTreillisSample());
+type TreillisViewParams = {
+  treillis: MutableWeightedGraph<TreillisNode, TreillisEdge>,
+  width?: number,
+  height?: number,
+}
 
-const Drawer = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [treillis, setTreillis] = React.useState(initialState);
+const TreillisView = ({ treillis, width, height }: TreillisViewParams) => {
   const [text, setText] = React.useState("batata");
-  // const setAndCalcTreillis = (treillis: MutableUnweightedGraph<TreillisNode, TreillisEdge>) => setTreillis(solveTreillis(treillis));
+  const widthFinal = width ?? window.innerWidth;
+  const heightFinal = height ?? window.innerHeight;
 
   return (
-    <Stage width={width} height={height} className="Drawer-wrapper">
-      <Layer><Text text={'Insira o texto'} fontSize={32}/></Layer>
-      <Layer offsetX={-width / 2} offsetY={-height / 2}>
+    <Stage width={widthFinal} height={heightFinal} className="treillis-view-wrapper">
+      <Layer><Text text={text} fontSize={32} /></Layer>
+      <Layer offsetX={-widthFinal / 2} offsetY={-heightFinal / 2}>
         {treillis.nodes().filter(node => node.force !== undefined).map(node => (
           <Arrow
             key={Math.random()}
@@ -42,7 +43,7 @@ const Drawer = () => {
             <>
             <Line
               key={Math.random()} // TODO: fix this
-              //onMouseOver={() => setText(`${edge.value.forceModule.toFixed(2)} N`)}
+              onMouseOver={() => setText(`tração: ${edge.value.forceModule?.toFixed(2)}`)}
               points={[pos1.x, pos1.y, pos2.x, pos2.y].map(x => x * posFactor)}
               strokeWidth={5}
               stroke={edge.value.forceModule < 0 ? 'green' : 'blue'}
@@ -68,4 +69,4 @@ const Drawer = () => {
   );
 };
 
-export default Drawer;
+export default TreillisView;
