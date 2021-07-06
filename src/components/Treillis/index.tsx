@@ -20,7 +20,7 @@ const Drawer = () => {
 
   return (
     <Stage width={width} height={height} className="Drawer-wrapper">
-      <Layer><Text text={text} fontSize={32}/></Layer>
+      <Layer><Text text={'Insira o texto'} fontSize={32}/></Layer>
       <Layer offsetX={-width / 2} offsetY={-height / 2}>
         {treillis.nodes().filter(node => node.force !== undefined).map(node => (
           <Arrow
@@ -28,21 +28,27 @@ const Drawer = () => {
             x={node.pos.x * posFactor}
             y={node.pos.y * posFactor}
             points={[0, 0, node!.force!.x, node!.force!.y].map(x => x * forceFactor)}
-            stroke="black"
-            fill="black"
+            stroke="red"
+            fill="red"
+            strokeWidth={5}
           />))}
 
         {treillis.edges().map((edge) => {
           const pos1 = edge.source.pos
           const pos2 = edge.target.pos
+          const textPosX = (pos1.x + (pos2.x - pos1.x)/3)*posFactor;
+          const textPosY = (pos1.y + (pos2.y - pos1.y)/3)*posFactor
           return (
+            <>
             <Line
               key={Math.random()} // TODO: fix this
-              onMouseOver={() => setText(`tração: ${edge.value.forceModule.toFixed(2)}`)}
+              //onMouseOver={() => setText(`${edge.value.forceModule.toFixed(2)} N`)}
               points={[pos1.x, pos1.y, pos2.x, pos2.y].map(x => x * posFactor)}
               strokeWidth={5}
-              stroke='black'
+              stroke={edge.value.forceModule < 0 ? 'green' : 'blue'}
             />
+            <Text x={textPosX} y={textPosY} text={`${edge.value.forceModule.toFixed(2)} N`} fontSize={16}/>
+            </>
           );
         })}
 
@@ -54,7 +60,7 @@ const Drawer = () => {
               x={node.pos.x * posFactor}
               y={node.pos.y * posFactor}
               radius={10}
-              fill="red" />
+              fill="black" />
           );
         })}
       </Layer>
