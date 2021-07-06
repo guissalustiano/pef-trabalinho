@@ -1,0 +1,4 @@
+
+.treillis-view-wrapper canvas {
+  border: 2px solid !important; /* apenas para debug juro que não sou desses */
+}

@@ -1,0 +1,14 @@
+.treillis-wrapper {
+  display: flex;
+  flex-flow: row wrap-reverse;
+  align-content: center;
+  justify-content: center;
+}
+
+.treillis-view-wrapper {
+    margin: 1rem;
+}
+
+.treillis-table-wrapper {
+    margin: 1rem;
+}
