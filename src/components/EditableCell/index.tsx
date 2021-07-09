@@ -1,11 +1,28 @@
 import React from "react";
+import Select from "react-select";
+
+const optionsName = [
+  { value: "A", label: "A" },
+  { value: "B", label: "B" },
+  { value: "C", label: "C" },
+  { value: "D", label: "D" },
+  { value: "E", label: "E" },
+  { value: "F", label: "F" },
+];
+
+const optionsLink = [
+  { value: "nenhum", label: "Nenhum" },
+  { value: "simples", label: "Apoio simples" },
+  { value: "completo", label: "Articulação" },
+];
 
 const EditableCell = ({
   value: initialValue,
   row: { index },
   column: { id },
-  updateMyData, // This is a custom function that we supplied to our table instance
-}) => {
+  updateMyData// This is a custom function that we supplied to our table instance
+},
+) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = React.useState(initialValue);
 
@@ -13,13 +30,12 @@ const EditableCell = ({
     setValue(e.target.value);
   };
 
+
   // We'll only update the external data when the input is blurred
   const onBlur = () => {
     updateMyData(index, id, value);
-    console.log(value);
     if (id === "link" && value !== "nenhum") {
-      console.log("oi");
-      updateMyData(index, "force", { x: "-", y: "-" });
+      updateMyData(index, "force", { x: "", y: "" });
     }
   };
 
@@ -28,22 +44,45 @@ const EditableCell = ({
     setValue(initialValue);
   }, [initialValue]);
 
-  if (id !== "link")
+  if (id !== "link" && id !== "id" && id !== "connections")
     return <input value={value} onChange={onChange} onBlur={onBlur} />;
-  else
+  else if (id === "link")
     return (
-      <select
-        id="cars"
-        name="cars"
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-      >
-        <option value="nenhum">Nenhum</option>
-        <option value="simples">Apoio Simples</option>
-        <option value="completo">Articulação</option>
-      </select>
+      <div style={{ width: 160 }}>
+        <Select
+          defaultValue={{ value: initialValue, label: "Apoio Simples" }}
+          onChange={(option) => setValue(option.value)}
+          onBlur={onBlur}
+          options={optionsLink}
+        />
+      </div>
     );
+  else if (id === "id") {
+    return (
+      <div style={{ width: 80 }}>
+        <Select
+          defaultValue={{ value: "A", label: "A" }}
+          onChange={(option) => setValue(option.value)}
+          onBlur={onBlur}
+          options={optionsName}
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div style={{ width: 200 }}>
+        <Select
+          onChange={(optionsArray) => {
+            console.log(optionsArray);
+            setValue(optionsArray.map((option) => option.value))}
+          }
+          onBlur={onBlur}
+          options={optionsName}
+          isMulti
+        />
+      </div>
+    );
+  }
 };
 
 export default EditableCell;

@@ -1,29 +1,45 @@
-import React from "react";
+import React, {useState } from "react";
 import { TreillisEdge, TreillisNode } from "../../helper/treillis";
 import { MutableWeightedGraph } from "graphs-for-js";
 
 import * as S from "./styles";
 import { useMemo } from "react";
 import TableNodes from "../TableNodes";
+import generateTrellisData from "./GenerateTrellisData";
+
+type TreillisTableParams = {
+  onChange: (value: MutableWeightedGraph<TreillisNode, TreillisEdge>) => void;
+};
 
 const dataInitial = [
   {
     id: "A",
     pos: {
-      x: 1,
-      y: 2,
+      x: "2.5",
+      y: "-2.5",
     },
-    link: "nenhum",
+    link: "simples",
     force: {
-      x: "0",
-      y: "0",
+      x: "",
+      y: "",
     },
+    connections: [],
   },
 ];
 
-type TreillisTableParams = {
-  onChange: (value: MutableWeightedGraph<TreillisNode, TreillisEdge>) => void;
-};
+export interface DataProps {
+  id: string;
+  pos: {
+    x: string;
+    y: string;
+  };
+  connections: string[];
+  link?: string;
+  force?: {
+    x: string;
+    y: string;
+  };
+}
 
 const TreillisTable = ({ onChange }: TreillisTableParams) => {
   const columns = useMemo(
@@ -47,6 +63,10 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
             Header: "Vínculo",
             accessor: "link",
           },
+          {
+            Header: "Conexões",
+            accessor: "connections",
+          },
         ],
       },
       {
@@ -68,11 +88,24 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
     []
   );
 
-  const [data, setData] = React.useState(dataInitial);
+  const [data, setData] = useState(dataInitial);
 
   const updateMyData = (rowIndex, columnId, value) => {
-    console.log(rowIndex, columnId, value);
+    if (columnId.includes('.')) {
+    const attributtes = columnId.split('.');
     setData((old) =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [attributtes[0]]: {...old[rowIndex][attributtes[0]], [attributtes[1]]: value},
+          };
+        }
+        return row;
+      })
+    );}
+    else {
+      setData((old) =>
       old.map((row, index) => {
         if (index === rowIndex) {
           return {
@@ -81,8 +114,7 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
           };
         }
         return row;
-      })
-    );
+      }))}
   };
 
   const addNewNode = () => {
@@ -91,23 +123,24 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
       {
         id: "A",
         pos: {
-          x: 1,
-          y: 2,
-        },
-        link: "nenhum",
-        force: {
           x: "0",
           y: "0",
         },
+        link: "nenhum",
+        force: {
+          x: "",
+          y: "",
+        },
+        connections: [],
       },
     ]);
-  };
+  }
 
   return (
     <S.TableBlock>
-      <h3>Tabea com o formulario</h3>
-      <TableNodes updateMyData={updateMyData} columns={columns} data={data} />
+      <TableNodes columns={columns} data={data} updateMyData={updateMyData} />
       <button onClick={addNewNode}>Adicionar nó</button>
+      <button onClick={() => onChange(generateTrellisData(data))}>Teste </button>
     </S.TableBlock>
   );
 };
