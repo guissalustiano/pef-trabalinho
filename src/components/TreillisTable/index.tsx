@@ -1,6 +1,8 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { TreillisEdge, TreillisNode } from "../../helper/treillis";
 import { MutableWeightedGraph } from "graphs-for-js";
+import Button from "@material-ui/core/Button";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import * as S from "./styles";
 import { useMemo } from "react";
@@ -11,14 +13,16 @@ type TreillisTableParams = {
   onChange: (value: MutableWeightedGraph<TreillisNode, TreillisEdge>) => void;
 };
 
+const nodesName = ["A", "B", "C", "D", "E", "F"];
+
 const dataInitial = [
   {
     id: "A",
     pos: {
-      x: "2.5",
-      y: "-2.5",
+      x: "0",
+      y: "0",
     },
-    link: "simples",
+    link: "nenhum",
     force: {
       x: "",
       y: "",
@@ -90,38 +94,61 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
 
   const [data, setData] = useState(dataInitial);
 
+  const deleteButtonsArray = data.map((element, index) => {
+    return (
+      <Button
+        variant="contained"
+        color="secondary"
+        startIcon={<DeleteIcon />}
+        style={{ marginBottom: 18 }}
+        onClick={() => {
+          data.splice(index, 1);
+          const newData = [...data];
+          setData(newData);
+        }}
+      >
+        remover
+      </Button>
+    );
+  });
+
   const updateMyData = (rowIndex, columnId, value) => {
-    if (columnId.includes('.')) {
-    const attributtes = columnId.split('.');
-    setData((old) =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [attributtes[0]]: {...old[rowIndex][attributtes[0]], [attributtes[1]]: value},
-          };
-        }
-        return row;
-      })
-    );}
-    else {
+    if (columnId.includes(".")) {
+      const attributtes = columnId.split(".");
       setData((old) =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          };
-        }
-        return row;
-      }))}
+        old.map((row, index) => {
+          if (index === rowIndex) {
+            return {
+              ...old[rowIndex],
+              [attributtes[0]]: {
+                ...old[rowIndex][attributtes[0]],
+                [attributtes[1]]: value,
+              },
+            };
+          }
+          return row;
+        })
+      );
+    } else {
+      setData((old) =>
+        old.map((row, index) => {
+          if (index === rowIndex) {
+            return {
+              ...old[rowIndex],
+              [columnId]: value,
+            };
+          }
+          return row;
+        })
+      );
+    }
   };
 
   const addNewNode = () => {
     setData((old) => [
       ...old,
       {
-        id: "A",
+        id: nodesName[old.length],
         pos: {
           x: "0",
           y: "0",
@@ -131,16 +158,39 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
           x: "",
           y: "",
         },
-        connections: [],
+        connections: ["A", "B", "E"],
       },
     ]);
-  }
+  };
+
+  console.log(data);
 
   return (
     <S.TableBlock>
-      <TableNodes columns={columns} data={data} updateMyData={updateMyData} />
-      <button onClick={addNewNode}>Adicionar nó</button>
-      <button onClick={() => onChange(generateTrellisData(data))}>Teste </button>
+      <S.ButtonsContainer>
+        <TableNodes columns={columns} data={data} updateMyData={updateMyData} />
+        <S.DeleteButtonsContainer>
+          {deleteButtonsArray}
+        </S.DeleteButtonsContainer>
+      </S.ButtonsContainer>
+      <S.ButtonsContainer>
+        <Button
+          onClick={addNewNode}
+          variant="contained"
+          color="primary"
+          style={{ backgroundColor: "#3A86FF", width: 150 }}
+        >
+          Adicionar nó
+        </Button>
+        <Button
+          onClick={() => onChange(generateTrellisData(data))}
+          variant="contained"
+          color="primary"
+          style={{ backgroundColor: "#014f86", width: 150 }}
+        >
+          Atualizar
+        </Button>
+      </S.ButtonsContainer>
     </S.TableBlock>
   );
 };
