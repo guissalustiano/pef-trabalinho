@@ -158,7 +158,7 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
           x: "",
           y: "",
         },
-        connections: ["A", "B", "E"],
+        connections: [],
       },
     ]);
   };
