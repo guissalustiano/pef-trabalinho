@@ -74,7 +74,7 @@ const EditableCell = ({
     );
   } else {
     return (
-      <div style={{ width: 200 }}>
+      <div style={{ width: 340 }}>
         <Select
           onChange={(optionsArray) => {
             console.log(optionsArray);

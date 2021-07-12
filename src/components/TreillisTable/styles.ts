@@ -9,7 +9,7 @@ export const TableBlock = styled.div`
 export const ButtonsContainer = styled.div`
   margin-top: 32px;
   display: flex;
-  width: 332px;
+  width: 500px;
   justify-content: space-between;
 `;
 

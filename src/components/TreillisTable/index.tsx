@@ -139,7 +139,7 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
         variant="contained"
         color="secondary"
         startIcon={<DeleteIcon />}
-        style={{ marginBottom: 18 }}
+        style={{ marginBottom: 20 }}
         onClick={() => {
           data.splice(index, 1);
           const newData = [...data];
@@ -184,22 +184,27 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
   };
 
   const addNewNode = () => {
-    setData((old) => [
-      ...old,
-      {
-        id: nodesName[old.length],
-        pos: {
-          x: "0",
-          y: "0",
+    if (data.length < 12)
+      setData((old) => [
+        ...old,
+        {
+          id: nodesName[old.length],
+          pos: {
+            x: "0",
+            y: "0",
+          },
+          link: "nenhum",
+          force: {
+            x: "",
+            y: "",
+          },
+          connections: [],
         },
-        link: "nenhum",
-        force: {
-          x: "0",
-          y: "0",
-        },
-        connections: [],
-      },
-    ]);
+      ]);
+  };
+
+  const restartTrellis = () => {
+    setData(dataInitial);
   };
 
   console.log(data);
@@ -228,6 +233,17 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
           style={{ backgroundColor: "#014f86", width: 150 }}
         >
           Atualizar
+        </Button>
+        <Button
+          onClick={() => {
+            restartTrellis();
+            onChange(generateTrellisData(dataInitial));
+          }}
+          variant="contained"
+          color="primary"
+          style={{ backgroundColor: "#4cc9f0", width: 150 }}
+        >
+          Reiniciar
         </Button>
       </S.ButtonsContainer>
     </S.TableBlock>
