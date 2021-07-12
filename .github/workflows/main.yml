@@ -23,7 +23,7 @@ jobs:
     
     - name: Build react app
       run: |
-        yarn build
+        yarn install && yarn build
 
     - name: Copy files to the test website with the AWS CLI
       run: |
