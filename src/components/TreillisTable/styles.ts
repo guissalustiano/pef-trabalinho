@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const TableBlock = styled.div`
   display: flex;
   flex-direction: column;
+  margin: 16px;
 `;
 
 export const ButtonsContainer = styled.div`

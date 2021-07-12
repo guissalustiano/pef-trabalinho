@@ -13,21 +13,60 @@ type TreillisTableParams = {
   onChange: (value: MutableWeightedGraph<TreillisNode, TreillisEdge>) => void;
 };
 
-const nodesName = ["A", "B", "C", "D", "E", "F"];
+const nodesName = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
 
 const dataInitial = [
   {
     id: "A",
     pos: {
-      x: "0",
-      y: "0",
+      x: "2.5",
+      y: "-2.5",
     },
     link: "nenhum",
     force: {
-      x: "0",
-      y: "0",
+      x: "3",
+      y: "5",
     },
-    connections: [],
+    connections: ["B", "C"],
+  },
+  {
+    id: "B",
+    pos: {
+      x: "-2.5",
+      y: "-2.5",
+    },
+    link: "simples",
+    force: {
+      x: "",
+      y: "",
+    },
+    connections: ["C", "D"],
+  },
+  {
+    id: "C",
+    pos: {
+      x: "-2.5",
+      y: "2.5",
+    },
+    force: {
+      x: "",
+      y: "",
+    },
+    link: "completo",
+    connections: ["D"],
+  },
+  {
+    id: "D",
+    pos: {
+      x: "2.5",
+      y: "2.5",
+    },
+    force: {
+      x: "",
+      y: "",
+    },
+    link: "completo",
+    connections: ["A"],
   },
 ];
 
