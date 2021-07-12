@@ -20,7 +20,7 @@ const TreillisView = ({ treillis, width, height }: TreillisViewParams) => {
   const widthFinal = width ?? window.innerWidth;
   const heightFinal = height ?? window.innerHeight;
 
-  const maxEdgeforce = Math.max(...treillis.edges().map(e => e.value.forceModule))
+  const maxEdgeforce = Math.max(...treillis.edges().map(e => Math.abs(e.value.forceModule)))
 
   const [scale, setScale] = useState(50);
   const [position, setPosition] = useState({x: widthFinal/2, y: heightFinal/2})

@@ -167,7 +167,7 @@ function solveStiffnessMatrix(treillis: MutableWeightedGraph<TreillisNode, Treil
 }
 
 function updateTrellis(treillis: MutableWeightedGraph<TreillisNode, TreillisEdge>, fbx: number[], sequence: matrixSequenceInfo[], forces: math.Matrix) {
-  treillis.edges().forEach((edge, i) => edge.value.forceModule = fbx[i]);
+  treillis.edges().forEach((edge, i) => edge.value.forceModule = -fbx[i]);
   sequence.forEach((s, i) => {
     if (s.node.force && s.node.force[s.posKey]) {
       return;
