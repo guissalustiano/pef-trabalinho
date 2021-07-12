@@ -24,8 +24,8 @@ const dataInitial = [
     },
     link: "nenhum",
     force: {
-      x: "",
-      y: "",
+      x: "0",
+      y: "0",
     },
     connections: [],
   },
@@ -155,8 +155,8 @@ const TreillisTable = ({ onChange }: TreillisTableParams) => {
         },
         link: "nenhum",
         force: {
-          x: "",
-          y: "",
+          x: "0",
+          y: "0",
         },
         connections: [],
       },
