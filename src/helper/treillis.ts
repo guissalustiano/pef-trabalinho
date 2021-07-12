@@ -153,7 +153,7 @@ function solveStiffnessMatrix(treillis: MutableWeightedGraph<TreillisNode, Treil
   const fa = nodalNotFreedomVariables.map(n => n.force);
   const kaa = reduceMatrix(nodalNotFreedomIndexes, nodalNotFreedomIndexes, stiffnessMatrix);
   const ua = math.multiply(math.inv(kaa), fa);
-  
+
   const kba = reduceMatrix(nodalFreedomIndexes, nodalNotFreedomIndexes, stiffnessMatrix);
   const fb = math.multiply(kba, ua)
 
@@ -192,7 +192,12 @@ function displacementsToForce(u: math.Matrix, sequence: matrixSequenceInfo[], ed
   return fb.subset(math.index(0)) as unknown as number;
 }
 
-export function solveTreillis(treillis: MutableWeightedGraph<TreillisNode, TreillisEdge>) {
-  solveStiffnessMatrix(treillis);
+export function solveTreillis(treillis: MutableWeightedGraph<TreillisNode, TreillisEdge>): MutableWeightedGraph<TreillisNode, TreillisEdge> | null {
+  try {
+    solveStiffnessMatrix(treillis);
+  } catch(e) {
+    console.error(e);
+    return null;
+  }
   return treillis;
 }

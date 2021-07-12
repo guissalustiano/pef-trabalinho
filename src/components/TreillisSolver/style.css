@@ -1,14 +1,25 @@
 .treillis-wrapper {
   display: flex;
-  flex-flow: row wrap-reverse;
+  flex-flow: column wrap-reverse;
   align-content: center;
   justify-content: center;
 }
 
 .treillis-view-wrapper {
     margin: 1rem;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.treillis-view-wrapper .error {
+  color:crimson;
+  font-weight: 800;
 }
 
 .treillis-table-wrapper {
     margin: 1rem;
+    display: flex;
+    align-content: center;
+    justify-content: center;
 }
