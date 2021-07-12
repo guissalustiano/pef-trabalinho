@@ -16,7 +16,7 @@ const defaultColumn = {
 const TableNodes: React.FC<TableNodesProps> = ({
   columns,
   data,
-  updateMyData
+  updateMyData,
 }) => {
   // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -29,7 +29,7 @@ const TableNodes: React.FC<TableNodesProps> = ({
     columns,
     data,
     defaultColumn,
-    updateMyData
+    updateMyData,
   });
 
   return (

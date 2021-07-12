@@ -20,16 +20,14 @@ const EditableCell = ({
   value: initialValue,
   row: { index },
   column: { id },
-  updateMyData// This is a custom function that we supplied to our table instance
-},
-) => {
+  updateMyData, // This is a custom function that we supplied to our table instance
+}) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = React.useState(initialValue);
 
   const onChange = (e) => {
     setValue(e.target.value);
   };
-
 
   // We'll only update the external data when the input is blurred
   const onBlur = () => {
@@ -50,8 +48,8 @@ const EditableCell = ({
     return (
       <div style={{ width: 160 }}>
         <Select
-          defaultValue={{ value: initialValue, label: "Apoio Simples" }}
           onChange={(option) => setValue(option.value)}
+          value={optionsLink.find((element) => element.value === value)}
           onBlur={onBlur}
           options={optionsLink}
         />
@@ -61,8 +59,8 @@ const EditableCell = ({
     return (
       <div style={{ width: 80 }}>
         <Select
-          defaultValue={{ value: "A", label: "A" }}
           onChange={(option) => setValue(option.value)}
+          value={optionsName.find((element) => element.value === value)}
           onBlur={onBlur}
           options={optionsName}
         />
@@ -74,8 +72,9 @@ const EditableCell = ({
         <Select
           onChange={(optionsArray) => {
             console.log(optionsArray);
-            setValue(optionsArray.map((option) => option.value))}
-          }
+            setValue(optionsArray.map((option) => option.value));
+          }}
+          value={optionsName.filter((option) => value.includes(option.value))}
           onBlur={onBlur}
           options={optionsName}
           isMulti
