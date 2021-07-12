@@ -3,6 +3,19 @@
   min-width: 100vw;
   display: flex;
   flex-flow: column;
+  align-content: space-between;
+  justify-content: space-between;
+}
+
+.App header {
+  padding:  0 2rem;
+}
+
+.App footer {
+  display: flex;
+  padding: 1rem 2rem;
   align-content: center;
-  justify-content: center;
+  justify-content: space-between;
+  color: white;
+  background-color: cornflowerblue;
 }
