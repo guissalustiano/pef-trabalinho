@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { solveTreillis } from '../../helper/treillis';
 import TreillisTable from '../TreillisTable';
 import TreillisView from '../TreillisView';
-// import { generateTreillisSample } from './data';
+import { generateTreillisSample } from './data';
 
 import "./style.css";
 
-// const initialTreillis = generateTreillisSample();
+const initialTreillis = generateTreillisSample();
 
 const TreillisSolver = () => {
-  const [treillis, setTreiliss] = useState(null)
+  const [treillis, setTreiliss] = useState(initialTreillis)
   const solvedTreillis = solveTreillis(treillis);
 
   return (
@@ -20,7 +20,7 @@ const TreillisSolver = () => {
       <div className="treillis-view-wrapper">
         {solvedTreillis == null ?
           <h3 className="error">treliça hipostática</h3> :
-          <TreillisView width={750} treillis={solvedTreillis} />
+          <TreillisView width={1200} height={600} treillis={solvedTreillis} />
         }
       </div>
     </div>
