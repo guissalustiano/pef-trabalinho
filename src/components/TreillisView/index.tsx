@@ -8,6 +8,7 @@ import TreillisViewEdge from '../TreillisViewEdge';
 import TreillisViewForce from '../TreillisViewForce';
 import { useState } from 'react';
 import { KonvaEventObject } from 'konva/lib/Node';
+import TreillisViewLink from '../TreillisViewLink';
 
 type TreillisViewParams = {
   treillis: MutableWeightedGraph<TreillisNode, TreillisEdge>,
@@ -59,6 +60,9 @@ const TreillisView = ({ treillis, width, height }: TreillisViewParams) => {
       y={position.y}
       >
       <Layer>
+      {treillis.nodes().filter(node => node.link !== undefined).map(node => (
+          <TreillisViewLink node={node} scale={scale} />))}
+
         {treillis.nodes().filter(node => node.force !== undefined).map(node => (
           <TreillisViewForce node={node} scale={scale} />))}
 

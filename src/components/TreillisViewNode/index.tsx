@@ -14,7 +14,7 @@ const TreillisViewNode = ({ node, scale=1 }: TreillisViewNodeParams) => (
     x={node.pos.x }
     y={node.pos.y}
     radius={10/scale}
-    fill="black" />
+    fill="purple" />
 )
 
 

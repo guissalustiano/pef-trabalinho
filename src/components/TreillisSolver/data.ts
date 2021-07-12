@@ -12,8 +12,8 @@ export const generateTreillisSample = () => {
       y: -2.5
     },
     force: {
-      x: 5,
-      y: 10,
+      x: 3,
+      y: 5,
     }
   }
   const nodeB = {
