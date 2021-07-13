@@ -50,6 +50,7 @@ const TreillisViewEdge = ({
         rotation={textPos.rot}
         text={`${edge.value.forceModule.toFixed(2)} N`}
         fontSize={16 / scale}
+        fontFamily="Roboto"
       />
     </>
   );

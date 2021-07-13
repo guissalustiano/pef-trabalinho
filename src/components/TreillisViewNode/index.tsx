@@ -25,6 +25,7 @@ const TreillisViewNode = ({ node, scale = 1 }: TreillisViewNodeParams) => {
         y={node.pos.y - 3 * r}
         text={node.id}
         fontSize={32 / scale}
+        fontFamily="Roboto"
       />
     </>
   );

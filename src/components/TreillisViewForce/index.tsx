@@ -45,6 +45,7 @@ const TreillisViewForce = ({ node, scale = 1 }: TreillisViewForceParams) => {
         text={`${forceModule.toFixed(2)} N`}
         fill="red"
         fontSize={16 / scale}
+        fontFamily="Roboto"
       />
     </>
   );
